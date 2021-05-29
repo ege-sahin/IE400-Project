@@ -1,10 +1,11 @@
 from pulp import *
+import cplex
 
-n = 5 #number of nodes in one border
-length = 10 # string length
+n = 4 #number of nodes in one border
+length = 14 # string length
 nSquare = pow(n, 2)
 NMatrix = [] #neighboring matrix
-chars = [1,0,1,0,0,1,0,0,0,1]
+chars = [1,0,0,0,1,0,0,1,1,0,0,0,1,0] 
 index = range(1,nSquare + 1)
 position = range(1,length + 1)
 
@@ -66,8 +67,6 @@ I = LpVariable.dicts("OneNode", index, cat="Binary")
 E = LpVariable.dicts("Doubleones", (index,index), cat="Binary")
 T = LpVariable("TempVariable1", cat="Integer")
 
-#Z = LpVariable.dicts("Objective", cat="Integer") #Gerekirse sil cat kısmını
-
 #Defining objective function
 prob += (((lpSum(E[i][j]* NMatrix[i-1][j-1] for i in index for j in index)) / 2) - T),"Maximum number of contact"
 prob += T - lpSum(chars[k-1] * chars[k] for k in range(1,length)) == 0
@@ -100,8 +99,9 @@ for i in index:
 # The problem data is written to an .lp file
 prob.writeLP("Part1.lp")
 
-# The problem is solved using PuLP's choice of Solver
-prob.solve()
+#The problem is solved using Cplex
+solver = getSolver("CPLEX_PY")
+prob.solve(solver)
 
 """
 # printing the values of all decision variables
@@ -109,6 +109,7 @@ for variable in prob.variables():
     print("{} = {}".format(variable.name, variable.varValue))
 """
 # Printing the grid with characters on their place
+print()
 nodeOrder = []
 if LpStatus[prob.status] == "Optimal":
     for i in index:

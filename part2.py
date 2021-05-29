@@ -1,11 +1,12 @@
 from pulp import *
+import cplex
 
-n = 6 #number of nodes in one border
-length = 11 # string length
+n = 4 #number of nodes in one border
+length = 14 # string length
 nSquare = pow(n, 2)
 NMatrix = [] #neighboring matrix
-chars = [1,0,0,0,0,1,0,0,0,1,0]
-chars2 =[0,1,1,1,1,0,1,1,1,0,1]
+chars = [1,0,0,0,1,0,0,1,1,0,0,0,1,0]
+chars2 =[0,1,1,1,0,1,1,0,0,1,1,1,0,1]
 index = range(1,nSquare + 1)
 position = range(1,length + 1)
 
@@ -121,9 +122,9 @@ prob += ((lpSum(E2[i][j]* NMatrix[i-1][j-1] for i in index for j in index)) / 2)
 # The problem data is written to an .lp file
 prob.writeLP("Part2.lp")
 
-# The problem is solved using PuLP's choice of Solver
-prob.solve()
-
+#The problem is solved using Cplex
+solver = getSolver("CPLEX_PY")
+prob.solve(solver)
 
 """
 # printing the values of all decision variables
@@ -131,13 +132,14 @@ for variable in prob.variables():
     print("{} = {}".format(variable.name, variable.varValue))
 """
 # Printing the grid with characters on their place
+print()
 nodeOrder = []
 if LpStatus[prob.status] == "Optimal":
     for i in index:
         t = 0
         for k in position:
             t += (G[i][k].varValue)
-            if G[i][k].varValue == 1:
+            if G[i][k].varValue >= 1:
                 nodeOrder.append(k)
         if t == 0:
             nodeOrder.append("N")
