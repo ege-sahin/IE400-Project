@@ -1,11 +1,11 @@
 from pulp import *
 
-n = 6 #number of nodes in one border
-length = 11 # string length
+n = 5 #number of nodes in one border
+length = 20 # string length
 nSquare = pow(n, 2)
 NMatrix = [] #neighboring matrix
-chars = [1,0,0,0,0,1,0,0,0,1,0]
-chars2 =[0,1,1,1,1,0,1,1,1,0,1]
+chars = [1,0,0,0,0,1,0,0,0,1,0,1,0,0,1,0,0,0,0,0]
+chars2 =[0,1,1,1,1,0,1,1,1,0,1,0,1,1,0,1,1,1,1,1]
 index = range(1,nSquare + 1)
 position = range(1,length + 1)
 
