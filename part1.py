@@ -66,8 +66,6 @@ I = LpVariable.dicts("OneNode", index, cat="Binary")
 E = LpVariable.dicts("Doubleones", (index,index), cat="Binary")
 T = LpVariable("TempVariable1", cat="Integer")
 
-#Z = LpVariable.dicts("Objective", cat="Integer") #Gerekirse sil cat kısmını
-
 #Defining objective function
 prob += (((lpSum(E[i][j]* NMatrix[i-1][j-1] for i in index for j in index)) / 2) - T),"Maximum number of contact"
 prob += T - lpSum(chars[k-1] * chars[k] for k in range(1,length)) == 0
